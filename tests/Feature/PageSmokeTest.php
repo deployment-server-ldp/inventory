@@ -2,14 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\ActivityLog;
 use App\Models\CncInventoryTransaction;
 use App\Models\CncProductionCompletion;
 use App\Models\CncProductionRecord;
 use App\Models\ImportedInventoryTransaction;
 use App\Models\Machine;
 use App\Models\MachineAssembly;
+use App\Models\Role;
 use App\Models\SparePart;
 use App\Reports\ReportRegistry;
+use App\Services\MasterDataRegistry;
+use App\Services\StockService;
 use Database\Seeders\DemoDataSeeder;
 use Tests\TestCase;
 
@@ -47,13 +51,13 @@ class PageSmokeTest extends TestCase
             route('imported.assemblies.index'), route('imported.assemblies.create'), route('imported.assemblies.show', $assembly), route('imported.assemblies.edit', $assembly),
             route('adjustments.index'), route('adjustments.create', 'cnc'), route('adjustments.create', 'imported'),
             route('reports.index'), route('admin.users.index'), route('admin.users.create'), route('admin.users.edit', $admin), route('admin.roles.index'),
-            route('admin.roles.edit', 1), route('admin.roles.create'), route('admin.activity.index'), route('admin.activity.show', 1), route('admin.system.health'), route('admin.system.logs'),
+            route('admin.roles.edit', Role::first()), route('admin.roles.create'), route('admin.activity.index'), route('admin.activity.show', ActivityLog::first()), route('admin.system.health'), route('admin.system.logs'),
             route('admin.company.edit'), route('lookup.parts', 'cnc'), route('lookup.parts', ['imported', 'q' => 'valve']), route('lookup.completion-pool', $cnc),
         ];
         foreach (['machines', 'operators', 'operations', 'categories', 'units', 'machinery-models', 'suppliers'] as $entity) {
             $urls[] = route('settings.index', $entity);
             $urls[] = route('settings.create', $entity);
-            $urls[] = route('settings.edit', [$entity, 1]);
+            $urls[] = route('settings.edit', [$entity, MasterDataRegistry::get($entity)['model']::query()->value('id')]);
         }
         foreach (array_keys(ReportRegistry::all()) as $key) {
             $urls[] = route('reports.show', ['report' => $key, 'period' => 'year']);
@@ -76,7 +80,7 @@ class PageSmokeTest extends TestCase
         }
         $this->get(route('reports.export', ['report' => 'imported-out-daily', 'format' => 'xlsx', 'period' => 'year']))->assertOk();
 
-        $this->assertSame([], app(\App\Services\StockService::class)->verify());
+        $this->assertSame([], app(StockService::class)->verify());
         $this->assertGreaterThan(0, CncInventoryTransaction::count());
     }
 }

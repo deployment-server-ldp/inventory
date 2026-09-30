@@ -27,9 +27,7 @@ use Illuminate\View\View;
 /** Part master for both inventories. The route supplies {type}; a part of the other type is a 404. */
 class PartController extends Controller
 {
-    public function __construct(private ImageService $images, private StockService $stock)
-    {
-    }
+    public function __construct(private ImageService $images, private StockService $stock) {}
 
     public function index(Request $request): View
     {
@@ -61,6 +59,7 @@ class PartController extends Controller
     public function create(): View
     {
         $type = $this->type();
+
         return view('parts.form', $this->formData($type, new SparePart(['inventory_type' => $type, 'is_active' => true])));
     }
 

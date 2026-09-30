@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\DB;
 class CategoryStockReport extends Report
 {
     public string $key = 'category-stock';
+
     public string $title = 'Category-wise stock report';
+
     public string $description = 'Number of parts and units in stock per category, separately for each inventory.';
+
     public string $group = 'both';
+
     public bool $usesDates = false;
+
     public array $filters = ['inventory_type'];
 
     public function columns(): array

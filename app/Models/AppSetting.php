@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\Cache;
 class AppSetting extends Model
 {
     protected $primaryKey = 'key';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = ['key', 'value'];
 
     public const DEFAULTS = [

@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\DB;
 class ImportedOutDailyReport extends Report
 {
     public string $key = 'imported-out-daily';
+
     public string $title = 'Daily imported OUT report';
+
     public string $description = 'All issues of imported parts with machine / purpose, collector and assembly.';
+
     public string $group = 'imported';
+
     public array $filters = ['part_imported', 'category_imported', 'model', 'assembly'];
 
     public function columns(): array

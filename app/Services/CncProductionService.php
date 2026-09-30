@@ -24,9 +24,7 @@ use Illuminate\Support\Facades\DB;
  */
 class CncProductionService
 {
-    public function __construct(private StockService $stock)
-    {
-    }
+    public function __construct(private StockService $stock) {}
 
     public function finalOperationId(SparePart $part): ?int
     {

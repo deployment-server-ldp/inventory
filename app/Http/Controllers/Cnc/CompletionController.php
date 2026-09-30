@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cnc;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LookupController;
 use App\Models\CncProductionCompletion;
+use App\Models\CncProductionRecord;
 use App\Models\SparePart;
 use App\Rules\QuantityForUnit;
 use App\Services\CncProductionService;
@@ -17,9 +18,7 @@ use Illuminate\View\View;
 /** Quality / production completion — the ONLY route by which CNC production reaches stock. */
 class CompletionController extends Controller
 {
-    public function __construct(private CncProductionService $service)
-    {
-    }
+    public function __construct(private CncProductionService $service) {}
 
     public function index(Request $request): View
     {
@@ -55,7 +54,7 @@ class CompletionController extends Controller
         }
         // Parts that currently have output waiting for completion
         $waiting = SparePart::type('cnc')->with(['primaryImage', 'unit', 'finalOperation'])
-            ->whereIn('id', \App\Models\CncProductionRecord::where('is_final_operation', true)->where('status', 'completed')->select('spare_part_id'))
+            ->whereIn('id', CncProductionRecord::where('is_final_operation', true)->where('status', 'completed')->select('spare_part_id'))
             ->orderBy('name')->get()
             ->map(fn ($p) => ['part' => $p, 'awaiting' => $this->service->awaitingCompletion($p->id)])
             ->filter(fn ($r) => $r['awaiting'] > 0)->values();

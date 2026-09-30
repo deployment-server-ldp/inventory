@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\DB;
 class MachineConsumptionReport extends Report
 {
     public string $key = 'machine-consumption';
+
     public string $title = 'Machine-wise spare parts consumption report';
+
     public string $description = 'Net imported parts issued per machinery model (reversed issues excluded).';
+
     public string $group = 'imported';
+
     public array $filters = ['model', 'part_imported', 'category_imported'];
 
     public function columns(): array

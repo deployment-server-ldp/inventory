@@ -15,7 +15,9 @@ class SparePart extends Model
     use HasActiveFlag;
 
     public const TYPE_CNC = 'cnc';
+
     public const TYPE_IMPORTED = 'imported';
+
     public const TYPES = [self::TYPE_CNC => 'CNC Manufactured', self::TYPE_IMPORTED => 'Imported'];
 
     protected $fillable = [

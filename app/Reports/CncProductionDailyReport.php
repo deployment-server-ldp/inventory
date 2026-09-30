@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\DB;
 class CncProductionDailyReport extends Report
 {
     public string $key = 'cnc-production-daily';
+
     public string $title = 'Daily CNC production report';
+
     public string $description = 'Every production entry with machine, part, operation, times, quantity and operator.';
+
     public array $filters = ['machine', 'part_cnc', 'operator', 'operation', 'txn_status'];
 
     public function columns(): array

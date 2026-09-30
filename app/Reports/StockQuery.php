@@ -2,7 +2,6 @@
 
 namespace App\Reports;
 
-use App\Models\User;
 use App\Support\DateRange;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;

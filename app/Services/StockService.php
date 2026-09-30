@@ -8,7 +8,6 @@ use App\Models\ImportedInventoryTransaction;
 use App\Models\SparePart;
 use App\Models\StockAdjustment;
 use App\Support\Qty;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

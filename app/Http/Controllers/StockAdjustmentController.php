@@ -15,9 +15,7 @@ use Illuminate\View\View;
 
 class StockAdjustmentController extends Controller
 {
-    public function __construct(private StockService $stock)
-    {
-    }
+    public function __construct(private StockService $stock) {}
 
     public function index(Request $request): View
     {

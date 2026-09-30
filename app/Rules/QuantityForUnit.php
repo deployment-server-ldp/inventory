@@ -10,9 +10,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /** Whole numbers only, unless the unit (given directly or via the part) allows decimals. */
 class QuantityForUnit implements ValidationRule
 {
-    public function __construct(private ?int $unitId = null, private ?int $partId = null)
-    {
-    }
+    public function __construct(private ?int $unitId = null, private ?int $partId = null) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

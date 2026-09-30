@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\DB;
 class CncMachineWiseReport extends Report
 {
     public string $key = 'cnc-machine-wise';
+
     public string $title = 'Machine-wise production report';
+
     public string $description = 'Totals per CNC machine for the selected period.';
+
     public array $filters = ['part_cnc', 'operator', 'operation'];
 
     public function columns(): array

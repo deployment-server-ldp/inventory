@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\DB;
 class LowStockReport extends Report
 {
     public string $key = 'low-stock';
+
     public string $title = 'Low-stock and out-of-stock report';
+
     public string $description = 'Active parts at or below their minimum level, or with zero stock.';
+
     public string $group = 'both';
+
     public bool $usesDates = false;
+
     public array $filters = ['inventory_type', 'stock_alert'];
 
     public function columns(): array

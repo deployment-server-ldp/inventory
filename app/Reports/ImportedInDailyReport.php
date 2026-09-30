@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\DB;
 class ImportedInDailyReport extends Report
 {
     public string $key = 'imported-in-daily';
+
     public string $title = 'Daily imported IN report';
+
     public string $description = 'All receipts of imported parts with supplier, document reference and cost.';
+
     public string $group = 'imported';
+
     public array $filters = ['part_imported', 'category_imported', 'supplier'];
 
     public function columns(): array

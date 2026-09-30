@@ -14,6 +14,7 @@ class Idempotency
 {
     /**
      * @template T of Model
+     *
      * @param  class-string<T>  $modelClass
      * @return array{0: T, 1: bool} [model, created]
      */

@@ -6,6 +6,7 @@ use App\Models\CncInventoryTransaction;
 use App\Models\ImportedInventoryTransaction;
 use App\Models\SparePart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Date-range stock ledger for either inventory: opening balance before the range, every
@@ -46,7 +47,7 @@ class LedgerData
             // running balance (by transaction date) at the first row of this page
             $offset = ($transactions->currentPage() - 1) * $transactions->perPage();
             $before = $offset > 0
-                ? (float) \Illuminate\Support\Facades\DB::query()->fromSub((clone $query)->reorder()->orderBy('transaction_date')->orderBy('id')->limit($offset)->select(['quantity_in', 'quantity_out']), 'x')
+                ? (float) DB::query()->fromSub((clone $query)->reorder()->orderBy('transaction_date')->orderBy('id')->limit($offset)->select(['quantity_in', 'quantity_out']), 'x')
                     ->selectRaw('COALESCE(SUM(quantity_in) - SUM(quantity_out), 0) b')->value('b')
                 : 0.0;
             $pageStart = $summary['opening'] + $before;

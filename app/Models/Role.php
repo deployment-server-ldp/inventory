@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Role extends Model
 {
     public const SUPER_ADMIN = 'super_admin';
+
     public const CNC_USER = 'cnc_user';
+
     public const IMPORT_USER = 'import_user';
+
     public const COMBINED_USER = 'combined_user';
 
     protected $fillable = ['name', 'display_name', 'description', 'is_system'];

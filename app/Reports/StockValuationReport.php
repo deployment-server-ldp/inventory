@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\DB;
 class StockValuationReport extends Report
 {
     public string $key = 'stock-valuation';
+
     public string $title = 'Stock valuation report';
+
     public string $description = 'Value of imported stock at the recorded unit cost. Only products with a cost are included; values are per currency.';
+
     public string $group = 'imported';
+
     public bool $usesDates = false;
+
     public array $filters = ['category_imported'];
 
     public function columns(): array

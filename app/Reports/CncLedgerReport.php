@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\DB;
 class CncLedgerReport extends Report
 {
     public string $key = 'cnc-ledger';
+
     public string $title = 'CNC inventory ledger (date range)';
+
     public string $description = 'Every CNC stock movement: opening, production receipts, issues, adjustments and reversals.';
+
     public string $group = 'cnc';
+
     public array $filters = ['part_cnc', 'ledger_type_cnc'];
+
     protected string $table = 'cnc_inventory_transactions';
 
     public function columns(): array

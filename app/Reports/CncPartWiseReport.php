@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\DB;
 class CncPartWiseReport extends Report
 {
     public string $key = 'cnc-part-wise';
+
     public string $title = 'Part-wise production report';
+
     public string $description = 'Per part: operation output, finished output, QC accepted / rejected in the period, and current stock.';
+
     public array $filters = ['machine', 'operator', 'category_cnc'];
 
     public function columns(): array

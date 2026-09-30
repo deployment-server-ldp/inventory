@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AppSetting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -62,7 +63,7 @@ class ExportService
         $r++;
         foreach ($meta + ['Generated' => now()->format('d M Y H:i').' by '.(auth()->user()?->name ?? 'system')] as $k => $v) {
             $sheet->setCellValue([1, $r], $k);
-            $sheet->setCellValueExplicit([2, $r], (string) $v, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValueExplicit([2, $r], (string) $v, DataType::TYPE_STRING);
             $sheet->getStyle([1, $r])->getFont()->setBold(true);
             $r++;
         }
@@ -80,7 +81,7 @@ class ExportService
                 if (is_int($v) || is_float($v)) {
                     $sheet->setCellValue([$i + 1, $r], $v);
                 } else {
-                    $sheet->setCellValueExplicit([$i + 1, $r], (string) $v, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit([$i + 1, $r], (string) $v, DataType::TYPE_STRING);
                 }
             }
         }

@@ -17,7 +17,9 @@ use Illuminate\Support\Str;
 class ImageService
 {
     public const DIR = 'parts';
+
     private const THUMB = 240;
+
     private const MAX_DIMENSION = 1600;
 
     public static function rules(bool $required = true): array

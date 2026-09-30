@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Imported;
 
 use App\Http\Controllers\Controller;
+use App\Models\ImportedInventoryTransaction;
 use App\Models\MachineAssembly;
 use App\Models\MachineAssemblyItem;
 use App\Models\MachineryModel;
-use App\Models\SparePart;
 use App\Rules\QuantityForUnit;
 use App\Services\ActivityLogger;
 use App\Services\ImportedInventoryService;
@@ -23,9 +23,7 @@ use Illuminate\View\View;
  */
 class AssemblyController extends Controller
 {
-    public function __construct(private ImportedInventoryService $service)
-    {
-    }
+    public function __construct(private ImportedInventoryService $service) {}
 
     public function index(Request $request): View
     {
@@ -38,7 +36,7 @@ class AssemblyController extends Controller
         }
         $assemblies = $query->latest('id')->paginate($this->perPage($request))->withQueryString();
         $planned = MachineAssemblyItem::whereIn('machine_assembly_id', $assemblies->pluck('id'))->groupBy('machine_assembly_id')->selectRaw('machine_assembly_id, SUM(planned_quantity) q')->pluck('q', 'machine_assembly_id');
-        $issued = \App\Models\ImportedInventoryTransaction::whereIn('machine_assembly_id', $assemblies->pluck('id'))->where('type', 'out')->where('is_reversed', false)
+        $issued = ImportedInventoryTransaction::whereIn('machine_assembly_id', $assemblies->pluck('id'))->where('type', 'out')->where('is_reversed', false)
             ->groupBy('machine_assembly_id')->selectRaw('machine_assembly_id, SUM(quantity_out) q')->pluck('q', 'machine_assembly_id');
 
         return view('imported.assemblies.index', compact('assemblies', 'planned', 'issued'));
@@ -53,7 +51,7 @@ class AssemblyController extends Controller
     {
         $data = $this->validated($request);
         $assembly = MachineAssembly::create($data + [
-            'reference_no' => $data['reference_no'] ?: ReferenceGenerator::next('ASM'),
+            'reference_no' => ($data['reference_no'] ?? null) ?: ReferenceGenerator::next('ASM'),
             'created_by' => $request->user()->id,
         ]);
         ActivityLogger::log('assembly.created', "Assembly {$assembly->reference_no} '{$assembly->name}' created", $assembly, [], $data, 'imported');

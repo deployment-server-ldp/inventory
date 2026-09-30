@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\DB;
 class AssemblyConsumptionReport extends Report
 {
     public string $key = 'assembly-consumption';
+
     public string $title = 'Machine assembly material consumption report';
+
     public string $description = 'Planned vs actually issued imported parts per assembly (actual = net OUT transactions tagged with the assembly).';
+
     public string $group = 'imported';
+
     public bool $usesDates = false;
+
     public array $filters = ['assembly', 'assembly_status'];
 
     public function columns(): array

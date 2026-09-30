@@ -64,7 +64,7 @@
 
     // ---------------- static tom-select ----------------
     window.SPIMS = window.SPIMS || {};
-    document.querySelectorAll('select.tom').forEach(el => {
+    if (window.TomSelect) document.querySelectorAll('select.tom').forEach(el => {
         new TomSelect(el, { create: el.hasAttribute('data-create'), allowEmptyOption: true, maxOptions: 500, plugins: el.multiple ? ['remove_button'] : [] });
     });
 
@@ -104,7 +104,7 @@
         scope.querySelectorAll('[data-part-visible]').forEach(n => n.classList.toggle('d-none', !item));
         el.dispatchEvent(new CustomEvent('part:selected', { detail: item, bubbles: true }));
     }
-    document.querySelectorAll('select[data-part-picker]').forEach(initPartPicker);
+    if (window.TomSelect) document.querySelectorAll('select[data-part-picker]').forEach(initPartPicker);
     document.querySelectorAll('[data-part-field]').forEach(n => n.addEventListener('input', () => { n.dataset.touched = '1'; }));
     window.SPIMS.addPartToPicker = function (selector, item) {
         const el = document.querySelector(selector);
@@ -137,6 +137,7 @@
     });
 
     // ---------------- charts ----------------
+    if (!window.Chart) return;
     const palette = ['#1d4ed8', '#0891b2', '#16a34a', '#d97706', '#7c3aed', '#db2777', '#475569', '#0d9488', '#ca8a04', '#dc2626'];
     Chart.defaults.font.family = getComputedStyle(body).fontFamily;
     Chart.defaults.color = '#64748b';

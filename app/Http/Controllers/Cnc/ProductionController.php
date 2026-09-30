@@ -18,15 +18,12 @@ use App\Support\DateRange;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProductionController extends Controller
 {
-    public function __construct(private CncProductionService $service)
-    {
-    }
+    public function __construct(private CncProductionService $service) {}
 
     public function index(Request $request): View
     {

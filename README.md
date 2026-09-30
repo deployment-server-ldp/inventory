@@ -1,66 +1,54 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SPIMS — Spare Parts Manufacturing & Inventory Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Production-ready Laravel application for a cigarette-machinery spare-parts business that
+**manufactures parts on CNC machines** and **imports parts (pneumatic, electrical, sensors…) from Dubai**.
+Two independent inventories, one consolidated dashboard.
 
-## About Laravel
+| Module | What it does |
+|---|---|
+| **CNC Manufacturing** | Daily production entries per machine / part / operation / operator, running-job tracking, operation progress (WIP), machine history & monthly sheets, QC completion workflow — the *only* way production enters CNC stock |
+| **CNC Inventory** | Finished-goods stock, ledger (opening, receipts, issues, adjustments, reversals), stock issue |
+| **Imported Inventory** | Product master with images, Inventory IN / OUT, reversals, stock & ledger, dashboard |
+| **Machine Assemblies** | Bill of imported parts per machine being assembled; issues create normal OUT transactions (no double deduction) |
+| **Overall Dashboard** | KPIs, alerts, charts and recent activity for both streams, global filters, click-through |
+| **Reports Center** | 16 reports, search/sort/paginate, Excel / CSV / PDF export respecting filters and permissions |
+| **Admin** | Users, roles & granular permissions (server-enforced), activity/audit log, system health, error log, master data settings |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack
+Laravel 12 · PHP ≥ 8.2 · MySQL / MariaDB · Blade + Bootstrap 5 · Chart.js · Tom Select (all vendored — **no Node build**) ·
+PhpSpreadsheet · DomPDF. Runs on Hostinger shared hosting: no Redis, no queue worker, no cron.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Quick start (local)
+```bash
+composer install
+cp .env.example .env && php artisan key:generate      # set DB_* and APP_ENV=local, APP_DEBUG=true
+php artisan migrate --seed                             # schema + roles/permissions + base master data
+php artisan app:create-admin                           # first Super Admin (interactive)
+php artisan db:seed --class=DemoDataSeeder             # OPTIONAL sample data + demo users (local/staging only)
+php artisan serve
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Documentation
+| Document | Contents |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Business workflow, database design & relationships, stock-accounting rules, permissions & navigation, consistency risks, assumptions |
+| [docs/INSTALLATION_HOSTINGER.md](docs/INSTALLATION_HOSTINGER.md) | Fresh install, Hostinger step-by-step (DB, PHP, document root, `.env`, permissions, first admin), updates, troubleshooting |
+| [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) | Go-live checklist |
+| [docs/BACKUP_RESTORE.md](docs/BACKUP_RESTORE.md) | Backup & restore of database and images |
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Guide for Super Admin, CNC User, Import Inventory User, Combined User |
+| [docs/TESTING.md](docs/TESTING.md) | Test suite and mapping of the 12 acceptance scenarios |
 
-## Learning Laravel
+## Key guarantees
+* Stock changes only through `App\Services\StockService` — row-locked, atomic, never negative, ledger row with balance for every movement.
+* Intermediate CNC operations never inflate stock; only QC-approved completions of final-operation output do.
+* CNC and imported ledgers are separate tables; posting a part to the wrong ledger is refused.
+* Double submissions are idempotent; nothing is deleted — corrections are reversals/adjustments with reason & user.
+* `php artisan stock:verify` reconciles every balance against its ledger.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Useful commands
+```bash
+php artisan app:create-admin     # create a Super Admin
+php artisan stock:verify         # ledger reconciliation (read-only)
+php artisan test                 # full test suite (needs the spims_test database — see docs/TESTING.md)
+bash deploy/build-release.sh     # ZIP with vendor/ for hosts without Composer/SSH
+```

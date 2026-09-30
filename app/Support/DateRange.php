@@ -16,9 +16,7 @@ class DateRange
         'last_month' => 'Last month', 'year' => 'Year to date', 'custom' => 'Custom range',
     ];
 
-    public function __construct(public CarbonImmutable $from, public CarbonImmutable $to, public string $period = 'custom')
-    {
-    }
+    public function __construct(public CarbonImmutable $from, public CarbonImmutable $to, public string $period = 'custom') {}
 
     public static function fromRequest(Request $request, string $default = 'month'): self
     {

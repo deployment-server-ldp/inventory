@@ -21,9 +21,7 @@ use Illuminate\View\View;
 
 class CncStockController extends Controller
 {
-    public function __construct(private StockService $stock)
-    {
-    }
+    public function __construct(private StockService $stock) {}
 
     public function index(Request $request): View
     {

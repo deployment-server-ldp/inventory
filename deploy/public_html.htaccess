@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# SPIMS — use ONLY if the whole project was uploaded INTO public_html
+# (Hostinger shared hosting where the document root cannot be changed).
+# Copy this file to public_html/.htaccess. It sends every request to /public
+# and blocks direct access to application files (.env, storage, vendor…).
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block dotfiles (.env, .git …) everywhere
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+    # Block application directories if requested directly
+    RewriteRule ^(app|bootstrap|config|database|deploy|docs|resources|routes|storage|tests|vendor)(/|$) - [F,L]
+    RewriteRule ^(artisan|composer\.(json|lock)|phpunit\.xml|README\.md)$ - [F,L]
+
+    # Everything else is served from /public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+Options -Indexes

@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ImportedInventoryService
 {
-    public function __construct(private StockService $stock)
-    {
-    }
+    public function __construct(private StockService $stock) {}
 
     public function receive(array $data, ?string $idempotencyKey = null): array
     {

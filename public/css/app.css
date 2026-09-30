@@ -92,7 +92,7 @@ a.kpi:hover { border-color: #93b4f5; box-shadow: 0 3px 12px rgba(29,78,216,.08);
 th a.sort { color: inherit; display: inline-flex; align-items: center; gap: .25rem; }
 th a.sort:hover { color: var(--accent); }
 .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ref { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; }
+.ref { white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; }
 
 .thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: #fff; flex-shrink: 0; }
 .thumb-sm { width: 30px; height: 30px; }

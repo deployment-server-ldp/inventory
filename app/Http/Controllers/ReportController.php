@@ -17,6 +17,7 @@ use App\Services\ExportService;
 use App\Support\DateRange;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -101,7 +102,7 @@ class ReportController extends Controller
         $sub = (clone $query);
         $select = array_map(fn ($k) => "SUM(`{$k}`) as `{$k}`", $r->totals());
 
-        return (array) \Illuminate\Support\Facades\DB::query()->fromSub($sub, 'rpt')->selectRaw(implode(', ', $select))->first();
+        return (array) DB::query()->fromSub($sub, 'rpt')->selectRaw(implode(', ', $select))->first();
     }
 
     private function sort(Report $r, Builder $query, Request $request): void

@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\DB;
 class CncProductionMonthlyReport extends Report
 {
     public string $key = 'cnc-production-monthly';
+
     public string $title = 'Monthly CNC production report';
+
     public string $description = 'Production per month and machine: entries, operation output, finished (final-operation) output and machine hours.';
+
     public array $filters = ['machine', 'part_cnc', 'operator'];
 
     public function columns(): array

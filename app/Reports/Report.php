@@ -14,11 +14,16 @@ use Illuminate\Http\Request;
 abstract class Report
 {
     public string $key;
+
     public string $title;
+
     public string $description = '';
+
     /** cnc | imported | both */
     public string $group = 'cnc';
+
     public bool $usesDates = true;
+
     /** Filters shown on the report page: machine, part, operator, operation, category, model, assembly, inventory_type, stock, txn_status */
     public array $filters = [];
 

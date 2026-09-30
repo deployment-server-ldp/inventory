@@ -2,6 +2,7 @@
 
 use App\Exceptions\StockException;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\RequirePermission;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [SecurityHeaders::class]);
-        $middleware->alias(['active' => EnsureUserIsActive::class, 'perm' => \App\Http\Middleware\RequirePermission::class]);
+        $middleware->alias(['active' => EnsureUserIsActive::class, 'perm' => RequirePermission::class]);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));
     })

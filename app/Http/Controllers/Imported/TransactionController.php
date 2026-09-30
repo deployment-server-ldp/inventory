@@ -22,9 +22,7 @@ use Illuminate\View\View;
 
 class TransactionController extends Controller
 {
-    public function __construct(private ImportedInventoryService $service, private StockService $stock)
-    {
-    }
+    public function __construct(private ImportedInventoryService $service, private StockService $stock) {}
 
     public function index(Request $request): View
     {

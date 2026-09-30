@@ -111,9 +111,12 @@ cd ~/domains/your-domain.com/spims
 php artisan migrate --force
 php artisan db:seed --force
 ```
-Without SSH: create the schema on your own PC (`php artisan migrate && php artisan db:seed` against a local MySQL),
-export it with `mysqldump --no-tablespaces local_db > spims-schema.sql`, and import that file through
-hPanel → **Databases → phpMyAdmin → Import**. (SSH is included free on Hostinger plans that support Laravel and is simpler.)
+Without SSH: import the ready-made file **`database/sql/spims_install.sql`** through
+hPanel → **Databases → phpMyAdmin** → select the (empty) database → **Import** → Go.
+It contains every table plus the same base data as `db:seed` (roles & permissions, M-1…M-20, operations,
+units, categories) and marks all migrations as applied. It contains **no users** — create the first admin in §3.7.
+Import it only into an empty database: it drops and recreates the SPIMS tables.
+Regenerate it after schema changes with `bash deploy/export-install-sql.sh`.
 
 ### 3.7 Create the first Super Admin (secure)
 Credentials are never hard-coded. Choose one:

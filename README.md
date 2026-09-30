@@ -24,6 +24,7 @@ composer install
 cp .env.example .env && php artisan key:generate      # set DB_* and APP_ENV=local, APP_DEBUG=true
 php artisan migrate --seed                             # schema + roles/permissions + base master data
 php artisan app:create-admin                           # first Super Admin (interactive)
+# No SSH? Import database/sql/spims_install.sql in phpMyAdmin instead of migrate --seed.
 php artisan db:seed --class=DemoDataSeeder             # OPTIONAL sample data + demo users (local/staging only)
 php artisan serve
 ```

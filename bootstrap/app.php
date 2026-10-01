@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [SecurityHeaders::class]);
+        $middleware->prepend(\App\Http\Middleware\RedirectToCanonicalUrl::class);
         $middleware->alias(['active' => EnsureUserIsActive::class, 'perm' => RequirePermission::class]);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));

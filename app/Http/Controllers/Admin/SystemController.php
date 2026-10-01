@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\ActivityLogger;
 use App\Services\StockService;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -32,7 +36,56 @@ class SystemController extends Controller
 
     public function health(StockService $stock): View
     {
-        return view('admin.system.health', ['checks' => $this->checks(), 'issues' => $stock->verify()]);
+        return view('admin.system.health', [
+            'checks' => $this->checks(), 'issues' => $stock->verify(),
+            'pending' => self::pendingMigrations(), 'version' => self::version(),
+        ]);
+    }
+
+    /**
+     * Applies an uploaded code update without SSH: runs only NEW migrations (never fresh/reset — those are
+     * prohibited in production), adds any new permissions, and clears caches. Existing data and files are untouched.
+     */
+    public function applyUpdates(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->isSuperAdmin(), 403, 'Only a Super Admin can apply updates.');
+        $pending = self::pendingMigrations();
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+            Artisan::call('db:seed', ['--class' => RolesAndPermissionsSeeder::class, '--force' => true]);
+            Artisan::call('optimize:clear');
+        } catch (\Throwable $e) {
+            report($e);
+            ActivityLogger::log('system.update_failed', 'Applying updates failed: '.$e->getMessage(), null, [], ['pending' => $pending], 'admin');
+
+            return back()->withErrors(['update' => 'Update failed: '.$e->getMessage().' — your data was not deleted. Check the error log.']);
+        }
+        ActivityLogger::log('system.updated', 'Applied application updates (version '.self::version().'): '.count($pending).' new migration(s)', null, [], ['migrations' => array_values($pending)], 'admin');
+
+        return back()->with('success', 'Update applied (version '.self::version().'): '.count($pending).' new database change(s) run, permissions synchronised, caches cleared. Existing data was not touched.');
+    }
+
+    /** @return string[] migration names present in the code but not yet run on this database */
+    public static function pendingMigrations(): array
+    {
+        try {
+            $migrator = app('migrator');
+            if (! $migrator->repositoryExists()) {
+                return ['(migrations table missing — import database/sql/spims_install.sql first)'];
+            }
+            $files = $migrator->getMigrationFiles([database_path('migrations')]);
+
+            return array_values(array_diff(array_keys($files), $migrator->getRepository()->getRan()));
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    public static function version(): string
+    {
+        $file = base_path('VERSION');
+
+        return is_readable($file) ? trim((string) file_get_contents($file)) : 'unknown';
     }
 
     public function logs(): View

@@ -1,9 +1,22 @@
 @extends('layouts.app')
 @section('title', 'System health')
 @section('content')
-<x-page-header title="System health" subtitle="Environment checks and stock-ledger reconciliation.">
+<x-page-header title="System health" :subtitle="'Version '.$version.' · environment checks, updates and stock-ledger reconciliation.'">
     <a href="{{ route('admin.system.logs') }}" class="btn btn-outline-secondary"><i class="bi bi-file-text me-1"></i>Error log</a>
 </x-page-header>
+<div class="card mb-3 {{ $pending ? 'border-warning' : '' }}"><div class="card-header"><span class="card-title"><i class="bi bi-cloud-arrow-up me-1"></i>Application updates</span>
+    <span class="badge {{ $pending ? 'badge-soft-warning' : 'badge-soft-success' }}">{{ $pending ? count($pending).' pending' : 'Database up to date' }}</span></div>
+    <div class="card-body">
+        <p class="small text-muted mb-2">After uploading new code into the <strong>same folder</strong> (never delete the folder, <code>.env</code> or <code>storage/</code>),
+            apply the update here. Only new database changes are run; existing data, users and images are never removed.</p>
+        @if($pending)
+            <ul class="small mb-3">@foreach($pending as $m)<li><code>{{ $m }}</code></li>@endforeach</ul>
+        @endif
+        @if(auth()->user()->isSuperAdmin())
+            <form method="post" action="{{ route('admin.system.apply-updates') }}" data-confirm="Apply the update now? Take a database backup first (phpMyAdmin → Export).">@csrf
+                <button class="btn {{ $pending ? 'btn-warning' : 'btn-outline-secondary' }}"><i class="bi bi-arrow-repeat me-1"></i>Apply updates{{ $pending ? '' : ' (sync permissions & clear caches)' }}</button></form>
+        @endif
+    </div></div>
 <div class="row g-3">
     <div class="col-lg-7"><div class="card"><div class="card-header"><span class="card-title">Environment</span></div>
         <ul class="list-group list-group-flush">

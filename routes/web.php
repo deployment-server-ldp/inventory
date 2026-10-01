@@ -178,6 +178,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::middleware('perm:system.health')->group(function () {
             Route::get('/system/health', [SystemController::class, 'health'])->name('system.health');
             Route::get('/system/logs', [SystemController::class, 'logs'])->name('system.logs');
+            Route::post('/system/apply-updates', [SystemController::class, 'applyUpdates'])->name('system.apply-updates');
         });
         Route::get('/company', [CompanySettingsController::class, 'edit'])->middleware('perm:settings.company')->name('company.edit');
         Route::put('/company', [CompanySettingsController::class, 'update'])->middleware('perm:settings.company')->name('company.update');

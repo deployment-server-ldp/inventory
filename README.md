@@ -34,6 +34,7 @@ php artisan serve
 |---|---|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Business workflow, database design & relationships, stock-accounting rules, permissions & navigation, consistency risks, assumptions |
 | [docs/INSTALLATION_HOSTINGER.md](docs/INSTALLATION_HOSTINGER.md) | Fresh install, Hostinger step-by-step (DB, PHP, document root, `.env`, permissions, first admin), updates, troubleshooting |
+| [docs/SUBDOMAIN_DEPLOY_AND_UPDATES.md](docs/SUBDOMAIN_DEPLOY_AND_UPDATES.md) | Subdomain install and **safe updates without ever deleting the app folder** (SSH script or ZIP + "Apply updates" button) |
 | [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) | Go-live checklist |
 | [docs/BACKUP_RESTORE.md](docs/BACKUP_RESTORE.md) | Backup & restore of database and images |
 | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Guide for Super Admin, CNC User, Import Inventory User, Combined User |
@@ -52,4 +53,5 @@ php artisan app:create-admin     # create a Super Admin
 php artisan stock:verify         # ledger reconciliation (read-only)
 php artisan test                 # full test suite (needs the spims_test database — see docs/TESTING.md)
 bash deploy/build-release.sh     # ZIP with vendor/ for hosts without Composer/SSH
+bash deploy/update.sh            # safe in-place update on the server (backup, pull, new migrations only)
 ```

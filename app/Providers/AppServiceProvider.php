@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        // Live data protection: migrate:fresh, migrate:refresh, migrate:reset and db:wipe refuse to run in production.
+        DB::prohibitDestructiveCommands($this->app->isProduction());
 
         // Shared hosting often serves the app through a rewrite (public_html → /public); make generated
         // links use APP_URL instead of the physical script path, and HTTPS when APP_URL is https.

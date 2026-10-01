@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# SPIMS — protects the project when the WHOLE folder sits inside a web root
+# (e.g. a Hostinger subdomain folder). Every request is served from /public and
+# application files (.env, storage, vendor, …) can never be downloaded.
+# Harmless when the web server already points at /public.
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block dotfiles (.env, .git …)
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+    # Block application folders/files if requested directly
+    RewriteRule ^(app|bootstrap|config|database|deploy|docs|resources|routes|storage|tests|vendor)(/|$) - [F,L]
+    RewriteRule ^(artisan|composer\.(json|lock)|phpunit\.xml|README\.md|VERSION)$ - [F,L]
+
+    # Everything else is served from /public
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<FilesMatch "^\.(env|git|htpasswd)">
+    Require all denied
+</FilesMatch>
+Options -Indexes

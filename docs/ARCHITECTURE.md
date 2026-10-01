@@ -76,7 +76,7 @@ decision is listed in **§9 Assumptions & configurable decisions**.
 |------------------|------------------------------------------------------------------------|
 | Framework        | Laravel 12 (PHP ≥ 8.2), Blade, Eloquent                                |
 | Database         | MySQL 8 / MariaDB 10.4+ (InnoDB, utf8mb4)                              |
-| UI               | Bootstrap 5.3, Bootstrap Icons, Chart.js 4, Tom Select — **vendored in `public/vendor`**, no Node build, no CDN |
+| UI               | Bootstrap 5.3, Bootstrap Icons, Chart.js 4, Tom Select — **vendored in `public/lib`**, no Node build, no CDN |
 | Exports          | CSV (native), XLSX (PhpSpreadsheet), PDF (DomPDF)                     |
 | Sessions / cache | `database` driver — no Redis                                           |
 | Queue            | `sync` — no background worker required                                 |

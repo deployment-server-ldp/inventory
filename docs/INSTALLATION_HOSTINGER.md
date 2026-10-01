@@ -1,7 +1,7 @@
 # Installation & Hostinger Deployment Guide
 
 SPIMS runs on any standard PHP + MySQL host. It needs **no** Node.js, Docker, Redis, cron job or
-background worker. All CSS/JS libraries are already bundled in `public/vendor`.
+background worker. All CSS/JS libraries are already bundled in `public/lib`.
 
 ## 1. Requirements
 
@@ -63,7 +63,7 @@ Laravel must only expose its `public/` folder. On Hostinger the web root is fixe
 └── public_html/      ← contents of spims/public/ copied here
 ```
 1. Upload/extract the project to `domains/your-domain.com/spims`.
-2. Copy **everything inside** `spims/public/` (including the hidden `.htaccess`, `css/`, `js/`, `vendor/`, `favicon.svg`, `index.php`) into `public_html/`.
+2. Copy **everything inside** `spims/public/` (including the hidden `.htaccess`, `css/`, `js/`, `lib/`, `favicon.svg`, `index.php`) into `public_html/`.
 3. Edit `public_html/index.php` and change the three paths to point one level up into `spims`:
    ```php
    if (file_exists($maintenance = __DIR__.'/../spims/storage/framework/maintenance.php')) { require $maintenance; }
@@ -72,11 +72,11 @@ Laravel must only expose its `public/` folder. On Hostinger the web root is fixe
    ```
    With SSH you can instead replace `public_html` by a symlink:
    `rm -rf public_html && ln -s spims/public public_html`.
-4. After every future update, re-copy `spims/public/css`, `spims/public/js` and `spims/public/vendor` if they changed (not needed with the symlink).
+4. After every future update, re-copy `spims/public/css`, `spims/public/js` and `spims/public/lib` if they changed (not needed with the symlink).
 
-**Option B — whole project inside `public_html`**
+**Option B — whole project inside `public_html` or a subdomain folder** (see also `SUBDOMAIN_DEPLOY_AND_UPDATES.md`)
 1. Upload/extract the project directly into `public_html/`.
-2. Copy `deploy/public_html.htaccess` to `public_html/.htaccess`.
+2. Nothing to copy — the project's root `.htaccess` (included in the code) already does this.
    It rewrites every request to `public/` and **blocks** `.env`, `storage/`, `vendor/` and other application files.
 3. Verify: `https://your-domain.com/.env` and `https://your-domain.com/storage/logs/laravel.log` must return **403/404**.
 
@@ -152,18 +152,9 @@ Re-run after every `.env` change (or run `php artisan optimize:clear`).
 ---
 
 ## 4. Updating to a new version
-```bash
-php artisan down
-git pull            # or upload the new release ZIP over the old files (keep .env and storage/)
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan db:seed --class=RolesAndPermissionsSeeder --force   # adds any new permissions, keeps your edits
-php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache
-php artisan up
-```
-Always take a backup first (see `BACKUP_RESTORE.md`).
-
----
+**Never delete the app folder.** Follow `docs/SUBDOMAIN_DEPLOY_AND_UPDATES.md`:
+* SSH: `bash deploy/update.sh` (backup → pull → composer → new migrations only → caches).
+* No SSH: extract the new release ZIP over the same folder, then **Admin → System Health → Apply updates**.
 
 ## 5. Sample / test data (never on the live database)
 ```bash

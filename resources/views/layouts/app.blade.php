@@ -6,9 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') · {{ \App\Models\AppSetting::get('company_name') }}</title>
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/tom-select/tom-select.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lib/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lib/bootstrap-icons/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lib/tom-select/tom-select.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     @stack('head')
 </head>
@@ -73,9 +73,9 @@
 </div>
 
 @stack('modals')
-<script src="{{ asset('vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('vendor/tom-select/tom-select.complete.min.js') }}"></script>
-<script src="{{ asset('vendor/chartjs/chart.umd.js') }}"></script>
+<script src="{{ asset('lib/bootstrap/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('lib/tom-select/tom-select.complete.min.js') }}"></script>
+<script src="{{ asset('lib/chartjs/chart.umd.js') }}"></script>
 <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"></script>
 @stack('scripts')
 </body>

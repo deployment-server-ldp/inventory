@@ -6,8 +6,8 @@ cd "$(dirname "$0")/.."
 OUT="spims-release-$(date +%Y%m%d).zip"
 TMP="$(mktemp -d)"
 git archive --format=tar HEAD | tar -x -C "$TMP"
-( cd "$TMP" && composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist )
+( cd "$TMP" && composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist && find vendor -type d -name .git -prune -exec rm -rf {} + )
 rm -rf "$TMP/tests" "$TMP/phpunit.xml" "$TMP/.github"
-( cd "$TMP" && zip -qr "$OLDPWD/$OUT" . -x ".env" )
+( cd "$TMP" && zip -qr "$OLDPWD/$OUT" . -x ".env" "*/.git/*" )
 rm -rf "$TMP"
 echo "Created $OUT — upload and extract it, then follow docs/INSTALLATION_HOSTINGER.md"

@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\ActivityLog;
+use App\Models\PartCategory;
 use App\Models\Role;
+use App\Models\SparePart;
+use App\Models\Unit;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -69,5 +72,13 @@ class AuthTest extends TestCase
     public function test_media_requires_authentication(): void
     {
         $this->get('/media/part-image/1/thumb')->assertRedirect(route('login'));
+    }
+
+    public function test_missing_image_file_shows_placeholder(): void
+    {
+        $this->actingAs(User::factory()->create(['role_id' => Role::where('name', Role::SUPER_ADMIN)->value('id')]));
+        $part = SparePart::create(['inventory_type' => 'imported', 'sku' => 'PH-1', 'name' => 'Placeholder', 'category_id' => PartCategory::value('id'), 'unit_id' => Unit::value('id')]);
+        $img = $part->images()->create(['path' => 'parts/none.png', 'thumb_path' => 'parts/none_t.png', 'mime' => 'image/png', 'size' => 1, 'is_primary' => true]);
+        $this->get(route('media.part-image', [$img->id, 'thumb']))->assertOk()->assertHeader('Content-Type', 'image/svg+xml');
     }
 }

@@ -157,15 +157,21 @@ Re-run after every `.env` change (or run `php artisan optimize:clear`).
 * No SSH: extract the new release ZIP over the same folder, then **Admin → System Health → Apply updates**.
 
 ## 5. Sample / test data (never on the live database)
-```bash
-php artisan db:seed --class=DemoDataSeeder
-```
-Creates demo operators, machinery models, suppliers, 10 CNC parts, 12 imported products (with generated images),
-six weeks of production, completions, IN/OUT movements, two assemblies and one demo user per role
-(random passwords printed once). Use it on a staging copy only. It refuses to run in `APP_ENV=production`
-unless you explicitly confirm.
 
----
+**Without SSH (phpMyAdmin):** use the two ready-made demo files in `database/sql/`:
+1. Import `spims_demo_full.sql` into an **empty test database** (it drops & recreates all tables).
+2. Upload `spims_demo_images.zip` into `<app folder>/storage/app/private/` and **Extract** it there
+   (creates `storage/app/private/parts/...`). Without it, parts show an "Image not uploaded" placeholder.
+3. Sign in with `demo_admin` / `Demo@12345` (other demo users: `demo_cnc`, `demo_import`, `demo_combined`, same password).
+   Every demo user must set a new password at first login.
+
+Contents: 10 CNC parts, 12 imported products (with images), 8 operators, 5 machinery models, 3 suppliers,
+~6 weeks of production (3 jobs running), QC completions (1 pending approval), CNC issues, imported IN/OUT,
+2 machine assemblies and the matching activity log.
+
+**With SSH:** `php artisan db:seed --class=DemoDataSeeder` (random demo passwords are printed once).
+
+Before go-live, use a fresh database imported from `spims_install.sql` (no demo data, no demo users).
 
 ## 6. Troubleshooting
 | Symptom | Fix |
